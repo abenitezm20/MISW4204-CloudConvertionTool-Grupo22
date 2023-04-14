@@ -146,7 +146,7 @@ cython_debug/
 # Archivos para compresión
 files/media/*
 files/static/*
-!files/media/.gitignore
-!files/static/.gitignore
+!files/media/.gitkeep
+!files/static/.gitkeep
 modelos/__pycache__
 vistas/__pycache__
