@@ -4,6 +4,7 @@
 # Workers
 workers = 20
 worker_class = 'gevent'
+timeout = 600
 
 # Server socket
 bind = '0.0.0.0:5000'
