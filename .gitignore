@@ -144,4 +144,7 @@ cython_debug/
 .idea/*
 
 # Archivos para compresión
-uploads/
+files/media/*
+files/static/*
+modelos/__pycache__
+vistas/__pycache__

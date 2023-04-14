@@ -1,10 +1,21 @@
 version: "3.9"
 
 services:
+  nginx:
+    image: pagespeed/nginx-pagespeed:latest
+    ports:
+      - 1337:80
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - static_volume:/files/static
+      - media_volume:/files/media
+    depends_on:
+      - web
+
   web:
     build: .
-    ports:
-      - 5000:5000
+    expose:
+      - 5000
     volumes:
       - .:/app
     environment:
@@ -37,3 +48,7 @@ services:
       - 6379:6379
     networks:
       - default
+
+volumes:
+  static_volume:
+  media_volume:
