@@ -8,3 +8,4 @@ gevent==22.10.2
 marshmallow_sqlalchemy==0.29.0
 psycopg2==2.9.6
 redis==4.5.4
+psycopg2-binary==2.9.6

@@ -87,3 +87,8 @@ class GestionTareas(Resource):
         db.session.delete(tarea)
         db.session.commit()
         return '', 204
+
+class Health(Resource):
+
+    def get(self):
+        return 'OK', 200
