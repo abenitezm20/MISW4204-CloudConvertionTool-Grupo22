@@ -5,13 +5,9 @@ import redis
 from flask import request, send_from_directory
 from flask_restful import Resource
 from werkzeug.utils import secure_filename
+from helper import allowed_file, get_file_path, STATIC_FOLDER, MEDIA_FOLDER, compress_file
 
 from modelos import db, StatusEnum, NewFormatEnum, Tarea, TareaSchema
-
-
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'json'}
-STATIC_FOLDER = os.path.join(os.getcwd(), 'files/static/')
-MEDIA_FILE = os.path.join(os.getcwd(), 'files/media/')
 
 CANAL_TAREAS = 'tareas'
 REDIS_HOST = os.environ.get('REDIS_HOST') or 'localhost'
@@ -21,16 +17,6 @@ REDIS_CONNECTION = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB)
 redis_db = REDIS_CONNECTION
 
 tarea_schema = TareaSchema()
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-def get_upload_file_path(filename, folder):
-    if not os.path.exists(folder):
-        os.makedirs(folder)
-    return os.path.join(folder, filename)
-
 
 class Tareas(Resource):
 
@@ -58,10 +44,9 @@ class Tareas(Resource):
             return 'El formato del archivo no es soportado', 400
 
         filename = secure_filename(file.filename)
-        print(filename)
 
         # Almacena el archivo en disco
-        upload_path = get_upload_file_path(filename, MEDIA_FILE)
+        upload_path = get_file_path(filename, MEDIA_FOLDER)
         file.save(upload_path)
 
         # Registra la tarea en BD
@@ -69,7 +54,8 @@ class Tareas(Resource):
                         timeStamp=datetime.datetime.now(), status=StatusEnum.uploaded)
         db.session.add(tarea)
         db.session.commit()
-        
+
+        compress_file(tarea.id)
         return 'Tarea creada - {}'.format(tarea.id), 200
 
 
@@ -87,7 +73,7 @@ class GestionTareas(Resource):
 class GestionArchivos(Resource):
 
     def get(self, filename):
-        return send_from_directory(MEDIA_FILE, filename)
+        return send_from_directory(STATIC_FOLDER, filename)
 
 
 class Health(Resource):

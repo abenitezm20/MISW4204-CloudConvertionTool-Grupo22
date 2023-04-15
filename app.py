@@ -2,8 +2,9 @@ import os
 from flask import Flask
 from flask_cors import CORS
 from flask_restful import Api
-from modelos import db, Tarea
+from modelos import db, Tarea, Usuario
 from vistas import Tareas, GestionTareas, Health, GestionArchivos
+from helper import encrypt
 
 DATABASE_URI = os.environ.get(
     'DATABASE_URI') or 'postgresql://admin:admin@localhost:5432/tool'
@@ -19,6 +20,13 @@ db.create_all()
 
 with app_context:
     Tarea.query.delete()
+    Usuario.query.delete()
+    usuario1=Usuario(usuario='alexanderB' , contrasena=encrypt('alexander') , email='alexanderB@uniandes.edu.co')
+    usuario2=Usuario(usuario='danielO' , contrasena=encrypt('daniel') , email='danielO@uniandes.edu.co')
+    usuario3=Usuario(usuario='lauraC' , contrasena=encrypt('laura') , email='lauraC@uniandes.edu.co')
+    usuario4=Usuario(usuario='alexanderC' , contrasena=encrypt('alexander') , email='alexanderC@uniandes.edu.co')
+    db.session.add_all([usuario1,usuario2,usuario3,usuario4])
+    db.session.commit()
 
 cors = CORS(app)
 
