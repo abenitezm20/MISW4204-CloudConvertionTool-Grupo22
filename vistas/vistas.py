@@ -1,20 +1,12 @@
-import os
 import datetime
-import json
-import redis
 from flask import request, send_from_directory
 from flask_restful import Resource
 from werkzeug.utils import secure_filename
-from helper import allowed_file, get_file_path, STATIC_FOLDER, MEDIA_FOLDER, compress_file
+from helper import allowed_file, get_file_path
+from config import STATIC_FOLDER, MEDIA_FOLDER
+from tasks import compress_file
 
 from modelos import db, StatusEnum, NewFormatEnum, Tarea, TareaSchema
-
-CANAL_TAREAS = 'tareas'
-REDIS_HOST = os.environ.get('REDIS_HOST') or 'localhost'
-REDIS_PORT = os.environ.get('REDIS_PORT') or 6379
-REDIS_DB = os.environ.get('REDIS_DB') or 0
-REDIS_CONNECTION = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB)
-redis_db = REDIS_CONNECTION
 
 tarea_schema = TareaSchema()
 
@@ -55,7 +47,7 @@ class Tareas(Resource):
         db.session.add(tarea)
         db.session.commit()
 
-        compress_file(tarea.id)
+        compress_file.delay(tarea.id)
         return 'Tarea creada - {}'.format(tarea.id), 200
 
 
