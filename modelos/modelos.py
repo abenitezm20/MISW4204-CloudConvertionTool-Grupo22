@@ -22,7 +22,7 @@ class Usuario(db.Model):
 
 class Tarea(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    # user_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
     fileName = db.Column(db.String(512))
     newFormat = db.Column(db.String(10))
     timeStamp = db.Column(db.DateTime)

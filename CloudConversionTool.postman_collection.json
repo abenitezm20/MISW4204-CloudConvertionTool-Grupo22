@@ -145,7 +145,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:1337/health",
+					"raw": "http://127.0.0.1:1337/api/files/MWII-S02-BP-001.zip",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -155,7 +155,57 @@
 					],
 					"port": "1337",
 					"path": [
-						"health"
+						"api",
+						"files",
+						"MWII-S02-BP-001.zip"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "signup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:1337/api/auth/signup",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "1337",
+					"path": [
+						"api",
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:1337/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "1337",
+					"path": [
+						"api",
+						"auth",
+						"login"
 					]
 				}
 			},

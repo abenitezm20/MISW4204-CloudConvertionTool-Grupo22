@@ -7,8 +7,7 @@ services:
       - 1337:80
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
-      - static_volume:/files/static
-      - media_volume:/files/media
+      - static_volume:/app/files/static
     depends_on:
       - web
 
@@ -18,12 +17,9 @@ services:
     expose:
       - 5000
     volumes:
-      - .:/app
+      - static_volume:/app/files/static
     environment:
       DATABASE_URI: "postgresql://admin:admin@db:5432/tool"
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      REDIS_DB: 0
     depends_on:
       - db
       - redis
@@ -36,15 +32,12 @@ services:
     build:
       context: .
     volumes:
-      - .:/app
+      - static_volume:/app/files/static
     environment:
       DATABASE_URI: "postgresql://admin:admin@db:5432/tool"
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      REDIS_DB: 0
     depends_on:
-      - web
       - redis
+      - web
     command: celery -A app.celery worker --loglevel=info
     networks:
       - default
@@ -69,4 +62,3 @@ services:
 
 volumes:
   static_volume:
-  media_volume:
