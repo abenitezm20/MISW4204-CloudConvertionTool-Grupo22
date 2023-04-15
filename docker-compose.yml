@@ -13,7 +13,8 @@ services:
       - web
 
   web:
-    build: .
+    build:
+      context: .
     expose:
       - 5000
     volumes:
@@ -28,6 +29,23 @@ services:
       - redis
     links:
       - db
+    networks:
+      - default
+
+  celery:
+    build:
+      context: .
+    volumes:
+      - .:/app
+    environment:
+      DATABASE_URI: "postgresql://admin:admin@db:5432/tool"
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+    depends_on:
+      - web
+      - redis
+    command: celery -A app.celery worker --loglevel=info
     networks:
       - default
 
