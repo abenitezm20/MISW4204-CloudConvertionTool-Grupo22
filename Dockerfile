@@ -1,5 +1,5 @@
 FROM python:3.9-slim-buster
-WORKDIR /usr/src/app
+WORKDIR /app
 RUN apt-get update && apt-get -y install libpq-dev gcc
 COPY . .
 RUN pip3 install -r requirements.txt
