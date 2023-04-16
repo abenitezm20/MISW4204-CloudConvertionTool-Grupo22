@@ -2,6 +2,7 @@ import os
 import hashlib
 import re
 from config import ALLOWED_EXTENSIONS, STATIC_FOLDER
+from random import randint
 
 regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
 
@@ -32,3 +33,8 @@ def get_static_folder_by_user(user_id):
     user_id = str(user_id)
     user_path = f'{STATIC_FOLDER}'
     return os.path.join(os.getcwd(), user_path)
+
+def random_int(n=8):
+    range_start = 10**(n-1)
+    range_end = (10**n)-1
+    return randint(range_start, range_end)

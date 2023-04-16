@@ -2,7 +2,7 @@ import datetime
 from flask import request, send_from_directory
 from flask_restful import Resource
 from werkzeug.utils import secure_filename
-from helper import allowed_file, get_file_path, is_email, encrypt, get_static_folder_by_user
+from helper import allowed_file, get_file_path, is_email, encrypt, get_static_folder_by_user, random_int
 from config import REGISTER_ALLOWED_FIELDS
 from tasks import compress_file
 from sqlalchemy import exc
@@ -84,15 +84,20 @@ class Tareas(Resource):
         if not allowed_file(file.filename):
             return 'El formato del archivo no es soportado', 400
 
-        filename = secure_filename(file.filename)
+        filename = file.filename.split('.')
+        ext = filename[1]
+        today = datetime.datetime.now()
+        random_integer = random_int()
+        new_file_name = f"{random_integer}.{ext}"
+
         # Almacena el archivo en disco
         file_path_by_user = get_static_folder_by_user(user_id)
-        upload_path = get_file_path(filename, file_path_by_user)
+        upload_path = get_file_path(new_file_name, file_path_by_user)
         file.save(upload_path)
 
         # Registra la tarea en BD
-        tarea = Tarea(fileName=filename, newFormat=new_format, user_id=user_id,
-                        timeStamp=datetime.datetime.now(), status=StatusEnum.uploaded)
+        tarea = Tarea(fileName=new_file_name, newFormat=new_format, user_id=user_id,
+                        timeStamp=today, status=StatusEnum.uploaded)
         db.session.add(tarea)
         db.session.commit()
 
