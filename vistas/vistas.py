@@ -4,7 +4,7 @@ from flask_restful import Resource
 from werkzeug.utils import secure_filename
 from helper import allowed_file, get_file_path, is_email, encrypt, get_static_folder_by_user, random_int
 from config import REGISTER_ALLOWED_FIELDS
-from tasks import compress_file
+from tasks import compress_all
 from sqlalchemy import exc
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
@@ -86,7 +86,7 @@ class Tareas(Resource):
 
         filename = file.filename.split('.')
         ext = filename[1]
-        today = datetime.datetime.now()
+        today = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         random_integer = random_int()
         new_file_name = f"{random_integer}.{ext}"
 
@@ -97,11 +97,10 @@ class Tareas(Resource):
 
         # Registra la tarea en BD
         tarea = Tarea(fileName=new_file_name, newFormat=new_format, user_id=user_id,
-                        timeStamp=today, status=StatusEnum.uploaded)
+                        createdAt=today, status=StatusEnum.uploaded)
         db.session.add(tarea)
         db.session.commit()
 
-        compress_file.delay(tarea.id)
         return 'Tarea creada - {}'.format(tarea.id), 200
 
 
@@ -124,10 +123,14 @@ class GestionArchivos(Resource):
         user_id = get_jwt_identity()
         file_path_by_user = get_static_folder_by_user(user_id)
         return send_from_directory(file_path_by_user, filename)
-    
-
 
 class Health(Resource):
 
     def get(self):
+        return 'OK', 200
+    
+class Procesar(Resource):
+
+    def get(self):
+        compress_all.delay()
         return 'OK', 200
