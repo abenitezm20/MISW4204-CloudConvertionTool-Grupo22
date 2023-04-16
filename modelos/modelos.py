@@ -12,7 +12,7 @@ class StatusEnum(str, enum.Enum):
 class NewFormatEnum(str, enum.Enum):
     ZIP = "zip"
     TAR_GZ = "tar.gz"
-    TAR_BZ2 = "ta.bz2"
+    TAR_BZ2 = "tar.bz2"
 
 class Usuario(db.Model):
     id = db.Column(db.Integer, primary_key=True)
