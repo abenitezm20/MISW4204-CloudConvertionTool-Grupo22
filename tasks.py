@@ -4,27 +4,41 @@ import zipfile
 import tarfile
 from os.path import basename
 from helper import filepath, get_file_path, get_static_folder_by_user
+from timeit import default_timer as timer
 
 @shared_task(bind=True)
-def compress_file(self, tarea_id):
-    tarea = Tarea.query.get(tarea_id)
+def compress_all(self):
+    tareas = Tarea.query.filter(Tarea.status==StatusEnum.uploaded).all()
+    for tarea in tareas:
+        print(f"procesando tarea con id: {tarea.id}")
+        compress_file(tarea)
+
+def compress_file(tarea):
     filename = tarea.fileName
     user_id = tarea.user_id
     ext = tarea.newFormat
     origin, destination = get_origin_destination_paths(user_id, filename, ext)
+    start_time = 0
+    end_time = 0
     if ext == NewFormatEnum.ZIP:
+        start_time = timer()
         zip_file(origin, destination)
-        update_task_state(tarea, StatusEnum.processed)
+        end_time = timer()
+        update_task_state(start_time, end_time, tarea, StatusEnum.processed)
         return
     
     if ext == NewFormatEnum.TAR_GZ:
+        start_time = timer()
         tar_gz(origin, destination)
-        update_task_state(tarea, StatusEnum.processed)
+        end_time = timer()
+        update_task_state(start_time, end_time, tarea, StatusEnum.processed)
         return
     
     if ext == NewFormatEnum.TAR_BZ2:
+        start_time = timer()
         tar_bz2(origin, destination)
-        update_task_state(tarea, StatusEnum.processed)
+        end_time = timer()
+        update_task_state(start_time, end_time, tarea, StatusEnum.processed)
         return
 
 
@@ -48,7 +62,8 @@ def get_origin_destination_paths(user_id, filename, new_ext):
     new_filepath = get_file_path(new_filename, user_path)
     return original_filepath, new_filepath
 
-def update_task_state(tarea, state):
+def update_task_state(start_time, end_time, tarea, state):
     tarea.status = state
+    tarea.processTime = end_time - start_time
     db.session.add(tarea)
     db.session.commit()

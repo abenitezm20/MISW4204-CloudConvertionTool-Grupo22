@@ -2,7 +2,7 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_restful import Api
 from modelos import Tarea, Usuario
-from vistas import db, Tareas, GestionTareas, Health, GestionArchivos, Registrar, Autenticar
+from vistas import db, Tareas, GestionTareas, Health, GestionArchivos, Registrar, Autenticar, Procesar
 from helper import encrypt
 from application import create_app
 
@@ -32,3 +32,4 @@ api.add_resource(Tareas, '/api/tasks')
 api.add_resource(GestionTareas, '/api/tasks/<int:id_task>')
 api.add_resource(GestionArchivos, '/api/files/<filename>')
 api.add_resource(Health, '/health')
+api.add_resource(Procesar, '/procesar')

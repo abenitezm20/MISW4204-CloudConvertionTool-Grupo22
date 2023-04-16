@@ -1,7 +1,12 @@
 import enum
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy as _BaseSQLAlchemy
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from sqlalchemy import Enum
+
+class SQLAlchemy(_BaseSQLAlchemy):
+    def apply_pool_defaults(self, app, options):
+        super(SQLAlchemy, self).apply_pool_defaults(self, app, options)
+        options["pool_pre_ping"] = True
 
 db = SQLAlchemy()
 
@@ -25,7 +30,8 @@ class Tarea(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
     fileName = db.Column(db.String(512))
     newFormat = db.Column(db.String(10))
-    timeStamp = db.Column(db.DateTime)
+    createdAt = db.Column(db.DateTime)
+    processTime = db.Column(db.Float(precision=3), nullable=True)
     status = db.Column(Enum(StatusEnum))
 
 class TareaSchema(SQLAlchemyAutoSchema):
