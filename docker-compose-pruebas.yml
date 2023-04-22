@@ -25,7 +25,10 @@ services:
     environment:
       DATABASE_URI: ${DATABASE_URI}
     depends_on:
+      - db
       - redis
+    links:
+      - db
     networks:
       - default
 
@@ -37,11 +40,22 @@ services:
         source: ${HOST_PATH}
         target: /app/files/static
     environment:
-      DATABASE_URI: ${DATABASE_URI}"
+      DATABASE_URI: ${DATABASE_URI}
     depends_on:
       - redis
       - web
     command: celery -A app.celery worker --loglevel=info
+    networks:
+      - default
+
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=tool
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+    ports:
+      - 5432:5432
     networks:
       - default
 
@@ -51,3 +65,10 @@ services:
       - 6379:6379
     networks:
       - default
+
+# volumes:
+#   static_volume:
+#     driver_opts:
+#       type: nfs
+#       o: addr=10.128.0.2,nolock,soft,rw,nfsvers=4
+#       device: :/var/nfs/general
