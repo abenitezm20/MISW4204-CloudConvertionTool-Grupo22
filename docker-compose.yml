@@ -12,6 +12,8 @@ services:
         target: /app/files/static
     depends_on:
       - web
+    links:
+      - web 
 
   web:
     build:
