@@ -29,6 +29,22 @@ services:
     networks:
       - default
 
+  celery:
+    build:
+      context: .
+    volumes:
+      - type: bind
+        source: ${HOST_PATH}
+        target: /app/files/static
+    environment:
+      DATABASE_URI: ${DATABASE_URI}"
+    depends_on:
+      - redis
+      - web
+    command: celery -A app.celery worker --loglevel=info
+    networks:
+      - default
+
   redis:
     image: redis
     ports:
