@@ -7,7 +7,9 @@ services:
       - 1337:80
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
-      - static_volume:/app/files/static
+      - type: bind
+        source: /nfs/general
+        target: /app/files/static
     depends_on:
       - web
 
@@ -17,7 +19,9 @@ services:
     expose:
       - 5000
     volumes:
-      - static_volume:/app/files/static
+      - type: bind
+        source: /nfs/general
+        target: /app/files/static
     environment:
       DATABASE_URI: "postgresql://admin:admin@db:5432/tool"
     depends_on:
@@ -32,7 +36,9 @@ services:
     build:
       context: .
     volumes:
-      - static_volume:/app/files/static
+      - type: bind
+        source: /nfs/general
+        target: /app/files/static
     environment:
       DATABASE_URI: "postgresql://admin:admin@db:5432/tool"
     depends_on:
@@ -60,5 +66,9 @@ services:
     networks:
       - default
 
-volumes:
-  static_volume:
+# volumes:
+#   static_volume:
+#     driver_opts:
+#       type: nfs
+#       o: addr=10.128.0.2,nolock,soft,rw,nfsvers=4
+#       device: :/var/nfs/general
