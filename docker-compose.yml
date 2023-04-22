@@ -32,21 +32,21 @@ services:
     networks:
       - default
 
-  celery:
-    build:
-      context: .
-    volumes:
-      - type: bind
-        source: /nfs/general
-        target: /app/files/static
-    environment:
-      DATABASE_URI: "postgresql://admin:admin@db:5432/tool"
-    depends_on:
-      - redis
-      - web
-    command: celery -A app.celery worker --loglevel=info
-    networks:
-      - default
+  # celery:
+  #   build:
+  #     context: .
+  #   volumes:
+  #     - type: bind
+  #       source: /nfs/general
+  #       target: /app/files/static
+  #   environment:
+  #     DATABASE_URI: "postgresql://admin:admin@db:5432/tool"
+  #   depends_on:
+  #     - redis
+  #     - web
+  #   command: celery -A app.celery worker --loglevel=info
+  #   networks:
+  #     - default
 
   db:
     image: postgres
