@@ -2,7 +2,9 @@
 Repositorio para App Cloud Convertion Tool - Grupo 22
 
 # Observaciones para developers
-> docker compose up: levanta el docker con los servicios de nginx, redis, postgres y la app
+> docker compose --env-file .env.prod up (para ser utilizado en el server)
+>
+> docker compose -f docker-compose-pruebas.yml up (para entornos locales)
 >
 > docker compose down: detiene el docker
 >
