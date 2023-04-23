@@ -37,7 +37,7 @@ services:
         source: ${HOST_PATH}
         target: /app/files/static
     environment:
-      DATABASE_URI: ${DATABASE_URI}"
+      DATABASE_URI: ${DATABASE_URI}
     depends_on:
       - redis
       - web
