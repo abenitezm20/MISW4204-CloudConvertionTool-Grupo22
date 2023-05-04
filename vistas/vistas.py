@@ -1,12 +1,15 @@
 import datetime
-from flask import request, send_from_directory
+import io
+import os
+from flask import request, send_file, send_from_directory
 from flask_restful import Resource
 from werkzeug.utils import secure_filename
-from helper import allowed_file, get_file_path, is_email, encrypt, get_static_folder_by_user, random_int
+from helper import allowed_file, get_file_path, is_email, encrypt, get_static_folder_by_user, random_int, remove_file, filepath
 from config import REGISTER_ALLOWED_FIELDS
 from tasks import compress_all
 from sqlalchemy import exc
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from application.google_services import GoogleService
 
 from modelos import db, StatusEnum, NewFormatEnum, Tarea, TareaSchema, Usuario
 
@@ -94,6 +97,8 @@ class Tareas(Resource):
         file_path_by_user = get_static_folder_by_user(user_id)
         upload_path = get_file_path(new_file_name, file_path_by_user)
         file.save(upload_path)
+        GoogleService.save_file(upload_path, new_file_name)
+        remove_file(upload_path)
 
         # Registra la tarea en BD
         tarea = Tarea(fileName=new_file_name, newFormat=new_format, user_id=user_id,
@@ -119,10 +124,17 @@ class GestionArchivos(Resource):
 
     @jwt_required()
     def get(self, filename):
-        print('filename: ', filename)
         user_id = get_jwt_identity()
         file_path_by_user = get_static_folder_by_user(user_id)
-        return send_from_directory(file_path_by_user, filename)
+        filenamepath = filepath(filename, file_path_by_user)
+        GoogleService.get_file(filenamepath, filename)
+        cloud_data = io.BytesIO()
+        with open(filenamepath, 'rb') as f:
+            cloud_data.write(f.read())
+
+        cloud_data.seek(0)
+        os.remove(filenamepath)
+        return send_file(cloud_data, as_attachment=True, download_name=filename)
 
 class Health(Resource):
 

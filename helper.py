@@ -38,3 +38,8 @@ def random_int(n=8):
     range_start = 10**(n-1)
     range_end = (10**n)-1
     return randint(range_start, range_end)
+
+def remove_file(filepath):
+    if os.path.exists(filepath):
+        os.remove(filepath)
+        
