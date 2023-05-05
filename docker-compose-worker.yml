@@ -7,9 +7,6 @@ services:
       - 1337:80
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
-      - type: bind
-        source: ${HOST_PATH}
-        target: /app/files/static
     depends_on:
       - web
 
@@ -18,12 +15,10 @@ services:
       context: .
     expose:
       - 5000
-    volumes:
-      - type: bind
-        source: ${HOST_PATH}
-        target: /app/files/static
     environment:
       DATABASE_URI: ${DATABASE_URI}
+      GOOGLE_ACCESS_FILE: ${GOOGLE_ACCESS_FILE}
+      GOOGLE_BUCKET: ${GOOGLE_BUCKET}
     depends_on:
       - redis
     networks:
@@ -32,12 +27,10 @@ services:
   celery:
     build:
       context: .
-    volumes:
-      - type: bind
-        source: ${HOST_PATH}
-        target: /app/files/static
     environment:
       DATABASE_URI: ${DATABASE_URI}
+      GOOGLE_ACCESS_FILE: ${GOOGLE_ACCESS_FILE}
+      GOOGLE_BUCKET: ${GOOGLE_BUCKET}
     depends_on:
       - redis
       - web
