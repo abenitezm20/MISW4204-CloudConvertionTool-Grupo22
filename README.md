@@ -12,3 +12,6 @@ Repositorio para App Cloud Convertion Tool - Grupo 22
 
 # Url base
 > http://127.0.0.1:1337
+
+# Para levantar solo el servidor de aplicacion de forma local
+> gunicorn app:app -w 1 -b 0.0.0.0:8080
