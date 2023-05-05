@@ -13,8 +13,8 @@ class GoogleService ():
             return GoogleService.client_bucket
         
         bucket_name = os.getenv('GOOGLE_BUCKET')
-        google_config_file = os.getenv('GOOGLE_ACCESS_FILE')
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(CREDENTIALS_FOLDER, google_config_file)
+        # google_config_file = os.getenv('GOOGLE_ACCESS_FILE')
+        # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(CREDENTIALS_FOLDER, google_config_file)
 
         storage_client = storage.Client()
         GoogleService.client_bucket = storage_client.bucket(bucket_name)
