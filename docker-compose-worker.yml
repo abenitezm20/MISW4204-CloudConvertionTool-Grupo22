@@ -17,8 +17,19 @@ services:
       - 5000
     environment:
       DATABASE_URI: ${DATABASE_URI}
-      IS_WORKER: true
+      IS_WORKER: 'true'
       GOOGLE_BUCKET: ${GOOGLE_BUCKET}
     command: flask run
     networks:
       - default
+
+  # db:
+  #   image: postgres
+  #   environment:
+  #     - POSTGRES_DB=tool
+  #     - POSTGRES_USER=admin
+  #     - POSTGRES_PASSWORD=admin
+  #   ports:
+  #     - 5432:5432
+  #   networks:
+  #     - default

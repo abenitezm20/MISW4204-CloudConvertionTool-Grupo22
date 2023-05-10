@@ -26,12 +26,16 @@ class SubscriberHandler():
             print(f'message is: {message}')
             data = message.data.decode()
             print(f'data is: {data}')
-            data = json.loads(data)
-            # {"id": 11}
-            task_id = data.get('id')
-            message.ack()
-            with app.app_context():
-                compress_task(task_id)
+            try:
+                message.ack()
+                data = json.loads(data)
+                # {"id": 11}
+                task_id = data.get('id')
+                with app.app_context():
+                    compress_task(task_id)
+            except Exception as e:
+                print(f'error in subscriptor callback: {e}')
+
 
         streaming_future = GoogleService.pubsub_subscribe(callback)
         print('listening...')

@@ -21,3 +21,14 @@ services:
     command: gunicorn --conf ./gunicorn.conf.py app:app --bind 0.0.0.0:5000
     networks:
       - default
+
+  # db:
+  #   image: postgres
+  #   environment:
+  #     - POSTGRES_DB=tool
+  #     - POSTGRES_USER=admin
+  #     - POSTGRES_PASSWORD=admin
+  #   ports:
+  #     - 5432:5432
+  #   networks:
+  #     - default

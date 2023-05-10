@@ -1,6 +1,6 @@
 import os
 from google.cloud import storage, pubsub_v1
-# from config import CREDENTIALS_FOLDER
+from config import CREDENTIALS_FOLDER
 
 class GoogleService ():
     client_bucket = None
@@ -17,6 +17,7 @@ class GoogleService ():
         
         bucket_name = os.getenv('GOOGLE_BUCKET')
 
+        # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(CREDENTIALS_FOLDER, 'cloud-convertion-tool-storage.json')
         storage_client = storage.Client()
         GoogleService.client_bucket = storage_client.bucket(bucket_name)
 
