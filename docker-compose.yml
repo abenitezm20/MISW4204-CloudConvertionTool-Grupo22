@@ -22,6 +22,26 @@ services:
     networks:
       - default
 
+  celery:
+    build:
+      context: .
+    environment:
+      DATABASE_URI: ${DATABASE_URI}
+      GOOGLE_BUCKET: ${GOOGLE_BUCKET}
+    depends_on:
+      - redis
+      - web
+    command: celery -A app.celery worker --loglevel=info
+    networks:
+      - default
+
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+    networks:
+      - default
+
   # db:
   #   image: postgres
   #   environment:

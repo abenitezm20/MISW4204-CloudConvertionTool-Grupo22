@@ -144,5 +144,5 @@ class Health(Resource):
 class Procesar(Resource):
 
     def get(self):
-        compress_all()
+        compress_all.delay()
         return 'OK', 200
