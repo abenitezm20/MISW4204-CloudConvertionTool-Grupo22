@@ -17,30 +17,8 @@ services:
       - 5000
     environment:
       DATABASE_URI: ${DATABASE_URI}
-      GOOGLE_ACCESS_FILE: ${GOOGLE_ACCESS_FILE}
+      IS_WORKER: true
       GOOGLE_BUCKET: ${GOOGLE_BUCKET}
-    depends_on:
-      - redis
-    networks:
-      - default
-
-  celery_work:
-    build:
-      context: .
-    environment:
-      DATABASE_URI: ${DATABASE_URI}
-      GOOGLE_ACCESS_FILE: ${GOOGLE_ACCESS_FILE}
-      GOOGLE_BUCKET: ${GOOGLE_BUCKET}
-    depends_on:
-      - redis
-      - web
-    command: celery -A app.celery worker --loglevel=info
-    networks:
-      - default
-
-  redis:
-    image: redis
-    ports:
-      - 6379:6379
+    command: flask run
     networks:
       - default

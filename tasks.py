@@ -2,17 +2,37 @@ from celery import shared_task
 from modelos import db, Tarea, NewFormatEnum, StatusEnum
 import zipfile
 import tarfile
+import json
+import logging
 from os.path import basename
 from helper import filepath, get_file_path, get_static_folder_by_user, remove_file
 from timeit import default_timer as timer
 from application.google_services import GoogleService
 
-@shared_task(bind=True)
-def compress_all(self):
+# para uso con celery
+# @shared_task(bind=True)
+# def compress_all(self):
+#     tareas = Tarea.query.filter(Tarea.status==StatusEnum.uploaded).all()
+#     for tarea in tareas:
+#         print(f"procesando tarea con id: {tarea.id}")
+#         compress_file(tarea)
+
+def compress_all():
     tareas = Tarea.query.filter(Tarea.status==StatusEnum.uploaded).all()
     for tarea in tareas:
-        print(f"procesando tarea con id: {tarea.id}")
-        compress_file(tarea)
+        message = {
+            'id': tarea.id
+        }
+        print(f'publicando tarea con id: {tarea.id}')
+        GoogleService.pubsub_publish(json.dumps(message))
+
+def compress_task(id):
+    tarea = Tarea.query.filter(Tarea.id==id, Tarea.status==StatusEnum.uploaded).first()
+    if tarea is None:
+        logging.info(f'la tarea con id: {id} o no existe o ya esta procesada')
+        return
+    logging.info(f'PROCESANDO. tarea con id: {id}')
+    # compress_file(tarea)
 
 def compress_file(tarea):
     filename = tarea.fileName
