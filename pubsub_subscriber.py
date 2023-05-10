@@ -5,28 +5,35 @@ import json
 
 class SubscriberHandler():
 
-    @staticmethod
-    def read_message(message):
-        print(f'message is: {message}')
-        data = message.data.decode()
-        print(f'data is: {data}')
-        data = json.loads(data)
-        # {"id": 11}
-        task_id = data.get('id')
-        compress_task(task_id)
-        message.ack()
+    # app_context = None
+
+    # @staticmethod
+    # def read_message(message):
+    #     print(f'message is: {message}')
+    #     data = message.data.decode()
+    #     print(f'data is: {data}')
+    #     data = json.loads(data)
+    #     # {"id": 11}
+    #     task_id = data.get('id')
+    #     # with SubscriberHandler.app_context:
+    #     compress_task(task_id)
+    #     message.ack()
 
     @staticmethod
-    def block_if_is_worker():
-        is_worker = os.getenv('IS_WORKER')
-        if is_worker is None:
-            return
+    def start_subscriber(app):
 
-        SubscriberHandler.start_subscriber()
+        def callback(message):
+            print(f'message is: {message}')
+            data = message.data.decode()
+            print(f'data is: {data}')
+            data = json.loads(data)
+            # {"id": 11}
+            task_id = data.get('id')
+            message.ack()
+            with app.app_context():
+                compress_task(task_id)
 
-    @staticmethod
-    def start_subscriber():
-        streaming_future = GoogleService.pubsub_subscribe(SubscriberHandler.read_message)
+        streaming_future = GoogleService.pubsub_subscribe(callback)
         print('listening...')
 
         with GoogleService.get_pubsub_subscriber_client():

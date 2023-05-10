@@ -3,7 +3,6 @@ from modelos import db, Tarea, NewFormatEnum, StatusEnum
 import zipfile
 import tarfile
 import json
-import logging
 from os.path import basename
 from helper import filepath, get_file_path, get_static_folder_by_user, remove_file
 from timeit import default_timer as timer
@@ -29,10 +28,10 @@ def compress_all():
 def compress_task(id):
     tarea = Tarea.query.filter(Tarea.id==id, Tarea.status==StatusEnum.uploaded).first()
     if tarea is None:
-        logging.info(f'la tarea con id: {id} o no existe o ya esta procesada')
+        print(f'la tarea con id: {id} o no existe o ya esta procesada')
         return
-    logging.info(f'PROCESANDO. tarea con id: {id}')
-    # compress_file(tarea)
+    print(f'PROCESANDO. tarea con id: {tarea.id}')
+    compress_file(tarea)
 
 def compress_file(tarea):
     filename = tarea.fileName

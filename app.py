@@ -6,6 +6,11 @@ from vistas import db, Tareas, GestionTareas, Health, GestionArchivos, Registrar
 from helper import encrypt
 from application import create_app
 from pubsub_subscriber import SubscriberHandler
+# from application.google_services import GoogleService
+# from tasks import compress_task
+
+import os
+import json
 
 app, celery = create_app()
 app_context = app.app_context()
@@ -14,7 +19,31 @@ jwt = JWTManager(app)
 
 db.create_all()
 
-SubscriberHandler.block_if_is_worker()
+is_worker = os.getenv('IS_WORKER')
+if is_worker is not None:
+    SubscriberHandler.start_subscriber(app)
+    
+    # def callback(message):
+    #     print(f'message is: {message}')
+    #     data = message.data.decode()
+    #     print(f'data is: {data}')
+    #     data = json.loads(data)
+    #     # {"id": 11}
+    #     task_id = data.get('id')
+    #     message.ack()
+    #     with app.app_context():
+    #         compress_task(task_id)
+
+    # streaming_future = GoogleService.pubsub_subscribe(callback)
+    # print('listening...')
+
+    # with GoogleService.get_pubsub_subscriber_client():
+    #     try:
+    #         streaming_future.result()
+    #     except ValueError:
+    #         streaming_future.cancel()
+    #         streaming_future.result()
+
 
 cors = CORS(app)
 
