@@ -5,6 +5,7 @@ from modelos import Tarea, Usuario
 from vistas import db, Tareas, GestionTareas, Health, GestionArchivos, Registrar, Autenticar, Procesar
 from helper import encrypt
 from application import create_app
+from pubsub_subscriber import SubscriberHandler
 
 app, celery = create_app()
 app_context = app.app_context()
@@ -13,15 +14,7 @@ jwt = JWTManager(app)
 
 db.create_all()
 
-# with app_context:
-#     Tarea.query.delete()
-#     Usuario.query.delete()
-#     usuario1=Usuario(usuario='alexanderB' , contrasena=encrypt('alexander') , email='alexanderB@uniandes.edu.co')
-#     usuario2=Usuario(usuario='danielO' , contrasena=encrypt('daniel') , email='danielO@uniandes.edu.co')
-#     usuario3=Usuario(usuario='lauraC' , contrasena=encrypt('laura') , email='lauraC@uniandes.edu.co')
-#     usuario4=Usuario(usuario='alexanderC' , contrasena=encrypt('alexander') , email='alexanderC@uniandes.edu.co')
-#     db.session.add_all([usuario1,usuario2,usuario3,usuario4])
-#     db.session.commit()
+SubscriberHandler.block_if_is_worker()
 
 cors = CORS(app)
 
