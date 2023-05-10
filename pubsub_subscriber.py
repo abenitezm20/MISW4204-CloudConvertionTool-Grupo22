@@ -7,7 +7,9 @@ class SubscriberHandler():
 
     @staticmethod
     def read_message(message):
+        print(f'message is: {message}')
         data = message.data.decode()
+        print(f'data is: {data}')
         data = json.loads(data)
         # {"id": 11}
         task_id = data.get('id')
@@ -25,6 +27,7 @@ class SubscriberHandler():
     @staticmethod
     def start_subscriber():
         streaming_future = GoogleService.pubsub_subscribe(SubscriberHandler.read_message)
+        print('listening...')
 
         with GoogleService.get_pubsub_subscriber_client():
             try:
