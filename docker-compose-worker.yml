@@ -6,11 +6,12 @@ services:
     build:
       context: .
     ports:
-      - 5000:5000
+      - ${PORT}:5000
     environment:
       DATABASE_URI: ${DATABASE_URI}
       IS_WORKER: 'true'
+      PORT: ${PORT}
       GOOGLE_BUCKET: ${GOOGLE_BUCKET}
-    command: flask run
+    command: gunicorn --conf ./gunicorn.conf.py app:app --bind 0.0.0.0:5000
     networks:
       - default

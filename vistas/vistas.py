@@ -1,12 +1,13 @@
 import datetime
 import io
 import os
+import json
 from flask import request, send_file, send_from_directory
 from flask_restful import Resource
 from werkzeug.utils import secure_filename
 from helper import allowed_file, get_file_path, is_email, encrypt, get_static_folder_by_user, random_int, remove_file, filepath
 from config import REGISTER_ALLOWED_FIELDS
-from tasks import compress_all
+from tasks import compress_all, compress_task
 from sqlalchemy import exc
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from application.google_services import GoogleService
@@ -147,8 +148,14 @@ class Procesar(Resource):
         compress_all.delay()
         return 'OK', 200
     
-class ProcesarTarea(Resource):
+class RecibirTarea(Resource):
     def get(self):
-        args = request.args
-        print(args)
+        params = request.args.get('key')
+        print('params: ', params)
+        data = json.loads(params)
+        print('json data: ', data)
+        # {"id": 11}
+        task_id = data.get('id')
+        print('id de tarea: ', task_id)
+        compress_task(int(task_id))
         return 'OK', 200
