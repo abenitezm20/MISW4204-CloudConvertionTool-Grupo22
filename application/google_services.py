@@ -6,8 +6,8 @@ class GoogleService ():
     client_bucket = None
     publisher = None
     subscriber = None
-    topic_path = 'projects/cloud-convertion-tool-384419/topics/compress-task'
-    subscriber_path = 'projects/cloud-convertion-tool-384419/subscriptions/compress-task-worker'
+    topic_path = 'projects/clouddevelopmentgrupo22/topics/compress-task'
+    subscriber_path = 'projects/clouddevelopmentgrupo22/subscriptions/compress-task-worker'
 
 
     @staticmethod

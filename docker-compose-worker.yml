@@ -1,20 +1,12 @@
 version: "3.9"
 
 services:
-  nginx:
-    image: pagespeed/nginx-pagespeed:latest
-    ports:
-      - 1337:80
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-    depends_on:
-      - web
 
-  web:
+  worker:
     build:
       context: .
-    expose:
-      - 5000
+    ports:
+      - 5000:5000
     environment:
       DATABASE_URI: ${DATABASE_URI}
       IS_WORKER: 'true'
@@ -22,14 +14,3 @@ services:
     command: flask run
     networks:
       - default
-
-  # db:
-  #   image: postgres
-  #   environment:
-  #     - POSTGRES_DB=tool
-  #     - POSTGRES_USER=admin
-  #     - POSTGRES_PASSWORD=admin
-  #   ports:
-  #     - 5432:5432
-  #   networks:
-  #     - default

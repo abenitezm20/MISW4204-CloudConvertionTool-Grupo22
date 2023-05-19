@@ -15,3 +15,31 @@ Repositorio para App Cloud Convertion Tool - Grupo 22
 
 # Para levantar solo el servidor de aplicacion de forma local
 > gunicorn app:app -w 1 -b 0.0.0.0:8080
+
+# Para construir la imagen de docker worker
+
+> docker-compose
+> -f docker-compose-worker.yml
+> -f docker-compose-worker-gcp.yml
+> build
+
+# Para construir la imagen de docker app
+
+> docker-compose
+> -f docker-compose-app.yml
+> -f docker-compose-app-gcp.yml
+> build
+
+# Para subir la imagen de docker worker
+
+> docker-compose
+> -f docker-compose-worker.yml
+> -f docker-compose-worker-gcp.yml
+> push
+
+# Para subir la imagen de docker app
+
+> docker-compose
+> -f docker-compose-app.yml
+> -f docker-compose-app-gcp.yml
+> push

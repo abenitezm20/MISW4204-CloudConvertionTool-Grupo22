@@ -7,16 +7,16 @@ from modelos import db
 def create_app():
 
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SQLALCHEMY_POOL_RECYCLE'] = 28000
-    app.config['SQLALCHEMY_POOL_TIMEOUT'] = 20000
-    app.config['SQLALCHEMY_POOL_SIZE'] = 10
-    app.config['SQLALCHEMY_MAX_OVERFLOW'] = 0
+    #app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
+    #app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    #app.config['SQLALCHEMY_POOL_RECYCLE'] = 28000
+    #app.config['SQLALCHEMY_POOL_TIMEOUT'] = 20000
+    #app.config['SQLALCHEMY_POOL_SIZE'] = 10
+    #app.config['SQLALCHEMY_MAX_OVERFLOW'] = 0
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=10)
     app.config['JWT_SECRET_KEY'] = 'anotherSecret'
 
-    db.init_app(app)
+    #db.init_app(app)
 
     app.config.from_mapping(
         CELERY=dict(

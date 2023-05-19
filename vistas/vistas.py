@@ -146,3 +146,9 @@ class Procesar(Resource):
     def get(self):
         compress_all.delay()
         return 'OK', 200
+    
+class ProcesarTarea(Resource):
+    def get(self):
+        args = request.args
+        print(args)
+        return 'OK', 200
