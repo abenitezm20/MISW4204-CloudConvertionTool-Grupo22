@@ -6,12 +6,12 @@ services:
     build:
       context: .
     ports:
-      - ${PORT}:5000
+      - ${PORT}
     environment:
       DATABASE_URI: ${DATABASE_URI}
       IS_WORKER: 'true'
       PORT: ${PORT}
       GOOGLE_BUCKET: ${GOOGLE_BUCKET}
-    command: gunicorn --conf ./gunicorn.conf.py app:app --bind 0.0.0.0:5000
+    #command: gunicorn --conf ./gunicorn.conf.py app:app --bind 0.0.0.0:${PORT}
     networks:
       - default
