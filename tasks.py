@@ -8,8 +8,8 @@ from helper import filepath, get_file_path, get_static_folder_by_user, remove_fi
 from timeit import default_timer as timer
 from application.google_services import GoogleService
 
-@shared_task(bind=True)
-def compress_all(self):
+#@shared_task(bind=True)
+def compress_all():
     tareas = Tarea.query.filter(Tarea.status==StatusEnum.uploaded).all()
     for tarea in tareas:
         message = {
