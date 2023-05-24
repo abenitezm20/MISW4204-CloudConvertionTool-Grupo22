@@ -2,6 +2,7 @@ import datetime
 import io
 import os
 import json
+import base64
 from flask import request, send_file, send_from_directory
 from flask_restful import Resource
 from werkzeug.utils import secure_filename
@@ -149,13 +150,13 @@ class Procesar(Resource):
         return 'OK', 200
     
 class RecibirTarea(Resource):
-    def get(self):
-        params = request.args.get('key')
-        print('params: ', params)
-        data = json.loads(params)
-        print('json data: ', data)
-        # {"id": 11}
+    def post(self):
+        message = request.json.get('message')
+        print('data es: ', message)
+        info = base64.b64decode(message.get('data')).decode()
+        data = json.loads(info)
+        print('info es: ', info)
         task_id = data.get('id')
-        print('id de tarea: ', task_id)
+        print('task id: ', task_id)
         compress_task(int(task_id))
         return 'OK', 200
