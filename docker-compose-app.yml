@@ -6,7 +6,7 @@ services:
     build:
       context: .
     ports:
-      - ${PORT}
+      - ${PORT}:5000
     environment:
       DATABASE_URI: ${DATABASE_URI}
       IS_WORKER: 'true'
