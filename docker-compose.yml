@@ -4,7 +4,7 @@ services:
   nginx:
     image: pagespeed/nginx-pagespeed:latest
     ports:
-      - 1337:80
+      - 80:80
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
     depends_on:
