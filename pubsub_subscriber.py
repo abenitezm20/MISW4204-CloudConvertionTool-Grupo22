@@ -5,20 +5,6 @@ import json
 
 class SubscriberHandler():
 
-    # app_context = None
-
-    # @staticmethod
-    # def read_message(message):
-    #     print(f'message is: {message}')
-    #     data = message.data.decode()
-    #     print(f'data is: {data}')
-    #     data = json.loads(data)
-    #     # {"id": 11}
-    #     task_id = data.get('id')
-    #     # with SubscriberHandler.app_context:
-    #     compress_task(task_id)
-    #     message.ack()
-
     @staticmethod
     def start_subscriber(app):
 

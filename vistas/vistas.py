@@ -1,12 +1,14 @@
 import datetime
 import io
 import os
+import json
+import base64
 from flask import request, send_file, send_from_directory
 from flask_restful import Resource
 from werkzeug.utils import secure_filename
 from helper import allowed_file, get_file_path, is_email, encrypt, get_static_folder_by_user, random_int, remove_file, filepath
 from config import REGISTER_ALLOWED_FIELDS
-from tasks import compress_all
+from tasks import compress_all, compress_task
 from sqlalchemy import exc
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from application.google_services import GoogleService
@@ -144,5 +146,17 @@ class Health(Resource):
 class Procesar(Resource):
 
     def get(self):
-        compress_all.delay()
+        compress_all()
+        return 'OK', 200
+    
+class RecibirTarea(Resource):
+    def post(self):
+        message = request.json.get('message')
+        print('data es: ', message)
+        info = base64.b64decode(message.get('data')).decode()
+        data = json.loads(info)
+        print('info es: ', info)
+        task_id = data.get('id')
+        print('task id: ', task_id)
+        compress_task(int(task_id))
         return 'OK', 200
